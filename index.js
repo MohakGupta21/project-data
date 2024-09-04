@@ -1,10 +1,27 @@
-const jsonServer = require("json-server"); // importing json-server library
-const server = jsonServer.create();
-const router = jsonServer.router("db.json");
-const middlewares = jsonServer.defaults();
-const port = process.env.PORT || 8080; //  chose port from here like 8080, 3001
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+import bodyParser from "body-parser";
+import dotenv from "dotenv";
+import { addMovie, deleteMovie, getAllMovies, updateMovies } from "./Controllers/MovieController.js";
 
-server.use(middlewares);
-server.use(router);
+dotenv.config();
 
-server.listen(port);
+const app = express();
+
+app.use(cors());
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+
+mongoose
+  .connect(process.env.MONGODB)
+  .then(() => app.listen(process.env.PORT, () => console.log("Listening")))
+  .catch((err) => console.log(err));
+
+app.get("/movies", getAllMovies);
+
+app.put("/movies/:id", updateMovies);
+
+app.post("/movies", addMovie);
+
+app.delete("/movies/:id", deleteMovie);
