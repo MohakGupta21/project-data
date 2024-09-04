@@ -40,5 +40,6 @@ const movieSchema = new mongoose.Schema({
 // movieSchema.plugin(AutoIncrement, { inc_field: 'id' });
 
 // Create the model
-export const Movie = mongoose.model('movies', movieSchema);
+const Movie = mongoose.model('movies', movieSchema);
 
+export default Movie;
